@@ -85,9 +85,8 @@ def main():
         )
         questions.append(question)
         running_cost += cost
-        print(f"${round(running_cost,2)}")
-
-    save_json(questions, args.out_path)
+        print(f"{i}, ${round(running_cost,2)}")
+        save_json(questions, args.out_path)  # save out each step just in case of a bug
 
 
 if __name__ == "__main__":
