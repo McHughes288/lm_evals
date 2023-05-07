@@ -12,9 +12,14 @@ models2cost = {
     "gpt-3.5-turbo": 0.0020,
     "text-davinci-003": 0.0200,
     "text-davinci-002": 0.0200,
+    "text-davinci-001": 0.0200,
     "text-curie-001": 0.0020,
     "text-babbage-001": 0.0005,
     "text-ada-001": 0.0004,
+    "davinci": 0.0200,
+    "curie": 0.0020,
+    "babbage": 0.0005,
+    "ada": 0.0004,
     "text-embedding-ada-002": 0.0004,
 }
 
