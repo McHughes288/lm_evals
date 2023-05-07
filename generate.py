@@ -1,7 +1,10 @@
 import argparse
 import random
+from datetime import datetime
 
-from utils import openai_call
+from utils import openai_call, save_json
+
+DATETIME_FORMAT = "%Y-%m-%dT%H-%MZ"
 
 
 def parse_examples(examples_path):
@@ -26,10 +29,10 @@ def question_generator(examples, temperature=1.4, top_p=0.975, verbose=True):
     Here are some examples:
     {examples}
     """  # noqa:  E201
-    response = openai_call(
+    text, cost = openai_call(
         prompt, temperature=temperature, top_p=top_p, verbose=verbose
     )
-    return response
+    return text, cost
 
 
 def main():
@@ -38,6 +41,12 @@ def main():
         "--examples",
         type=str,
         default="./eval/examples.txt",
+        help="path to human written examples",
+    )
+    parser.add_argument(
+        "--out_path",
+        type=str,
+        default=None,
         help="path to human written examples",
     )
     parser.add_argument(
@@ -52,16 +61,27 @@ def main():
     parser.add_argument("--verbose", action="store_true", default=False)
     args = parser.parse_args()
 
+    now = datetime.now().strftime(DATETIME_FORMAT)
+    if args.out_path is None:
+        args.out_path = f"./exp/{now}.json"
+
     examples = parse_examples(args.examples)
     chosen_examples = choose_few_shot(examples)
 
-    question = question_generator(
-        chosen_examples,
-        temperature=args.temperature,
-        top_p=args.top_p,
-        verbose=args.verbose,
-    )
-    print(question)
+    questions = []
+    running_cost = 0
+    for i in range(5):
+        question, cost = question_generator(
+            chosen_examples,
+            temperature=args.temperature,
+            top_p=args.top_p,
+            verbose=args.verbose,
+        )
+        questions.append(question)
+        running_cost += cost
+        print(f"${round(running_cost,2)}")
+
+    save_json(questions, args.out_path)
 
 
 if __name__ == "__main__":

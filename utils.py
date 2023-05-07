@@ -7,6 +7,17 @@ import openai
 OPENAI_API_MODEL = "gpt-3.5-turbo"
 openai.api_key = os.getenv("OPENAI_API_KEY", "")
 
+models2cost = {
+    "gpt-4": 0.03,
+    "gpt-3.5-turbo": 0.0020,
+    "text-davinci-003": 0.0200,
+    "text-davinci-002": 0.0200,
+    "text-curie-001": 0.0020,
+    "text-babbage-001": 0.0005,
+    "text-ada-001": 0.0004,
+    "text-embedding-ada-002": 0.0004,
+}
+
 
 def openai_call(
     prompt: str,
@@ -16,6 +27,7 @@ def openai_call(
     max_tokens: int = 100,
     verbose: bool = False,
 ):
+    assert model in models2cost, f"Please update models2cost to contain {model}"
     if verbose:
         print(prompt)
     while True:
@@ -29,7 +41,7 @@ def openai_call(
                     max_tokens=max_tokens,
                     top_p=top_p,
                 )
-                response = response.choices[0].text.strip()
+                text = response.choices[0].text.strip()
             else:
                 # Use chat completion API
                 messages = [{"role": "user", "content": prompt}]
@@ -42,10 +54,12 @@ def openai_call(
                     n=1,
                     stop=None,
                 )
-                response = response.choices[0].message.content.strip()
+                text = response.choices[0].message.content.strip()
+            cost = response.usage.total_tokens * models2cost[model] / 1000
             if verbose:
-                print(response)
-            return response
+                print(text)
+                print(f"${round(cost,2)}")
+            return text, cost
         except openai.error.RateLimitError:
             print(
                 "The OpenAI API rate limit has been exceeded. Waiting 10 seconds and trying again."
