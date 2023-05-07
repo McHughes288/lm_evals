@@ -1,7 +1,7 @@
 import argparse
 import os
 
-from utils import load_json, openai_call
+from utils import load_json, openai_call, save_json
 
 DATETIME_FORMAT = "%Y-%m-%dT%H-%MZ"
 
@@ -114,9 +114,7 @@ def main():
         name = os.path.basename(args.in_path)
         args.out_path = f"./exp_discriminate/{name}"
 
-    questions = []
-    for json_path in args.in_paths:
-        questions.extend(load_json(json_path))
+    questions = load_json(args.in_path)
 
     running_cost = 0
     rated_questions = []
@@ -142,6 +140,7 @@ def main():
         rated_questions.append({"question": question, "score": score})
         print(answer, score)
         print(f"{i}, ${round(running_cost,2)}")
+        save_json(rated_questions, args.out_path)
 
 
 if __name__ == "__main__":
