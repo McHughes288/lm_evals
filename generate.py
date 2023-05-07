@@ -58,6 +58,12 @@ def main():
     parser.add_argument(
         "--top_p", type=float, default=0.975, help="top_p of the LM generation"
     )
+    parser.add_argument(
+        "--number_to_generate",
+        type=int,
+        default=5,
+        help="number of questions to generate",
+    )
     parser.add_argument("--verbose", action="store_true", default=False)
     args = parser.parse_args()
 
@@ -66,11 +72,11 @@ def main():
         args.out_path = f"./exp/{now}.json"
 
     examples = parse_examples(args.examples)
-    chosen_examples = choose_few_shot(examples)
 
     questions = []
     running_cost = 0
-    for i in range(5):
+    for i in range(args.number_to_generate):
+        chosen_examples = choose_few_shot(examples)
         question, cost = question_generator(
             chosen_examples,
             temperature=args.temperature,
