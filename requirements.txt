@@ -2,3 +2,4 @@ jupyter
 matplotlib
 openai
 pre-commit
+urllib3==1.26.15
