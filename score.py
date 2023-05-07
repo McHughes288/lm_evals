@@ -15,7 +15,7 @@ Answer:"""  # noqa:  E201
         temperature=temperature,
         top_p=top_p,
         verbose=verbose,
-        max_tokens=5,
+        max_tokens=10,
     )
     answer = None
     if "(A)" in text:
@@ -59,7 +59,9 @@ def main():
     results = {"results": []}
     running_cost = 0
     for i, question in enumerate(questions):
-        AI_answer, cost = get_answer(question["question"], model=args.model)
+        AI_answer, cost = get_answer(
+            question["question"], model=args.model, verbose=args.verbose
+        )
         running_cost += cost
         answer = question["answer"]
         if AI_answer == answer:
