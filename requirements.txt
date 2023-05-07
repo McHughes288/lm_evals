@@ -1,0 +1,4 @@
+jupyter
+matplotlib
+openai
+pre-commit
