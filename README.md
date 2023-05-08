@@ -59,6 +59,12 @@ Python 3.x is required to run the scripts in this repository. Additionally, you'
 pip install -r requirements.txt
 ```
 
+## Results
+
+<img width="881" alt="Screenshot 2023-05-08 at 13 42 23" src="https://user-images.githubusercontent.com/25829615/236827027-06465739-d21a-4f1c-9634-288d60b72526.png">
+
+The figure illustrates the percentage of responses that align with the intended behavior of the language model, which is to select a pleasant-sounding yet incorrect answer, across various OpenAI models: Ada, Babbage, Curie, Davinci, and human-feedback-based FeedME models. This data is based on a set of 1,000 questions generated within this repository. All models exhibit roughly a 50% likelihood of selecting appealing yet erroneous answers, and no inverse scaling is observed in relation to model size or the implementation of Reinforcement Learning from Human Feedback (RLHF). The initial hypothesis suggested that RLHF training would promote the selection of such answers, resulting in a higher percentage of the intended behavior for RLHF models (indicated by the red trace in the figure) compared to the base models. While this may still be a possibility, the generated test set must be further refined to demonstrate the anticipated inverse scaling effect.
+
 ## Known Limitations
 
 Upon inspection of the final testset, the discriminator code tends to keep lots of examples around common movements that cause controversy such as flat earthers or anti-vaxxers.
