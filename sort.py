@@ -1,5 +1,6 @@
 import argparse
 import os
+import random
 from operator import itemgetter
 
 from discriminate import swap_choices
@@ -20,7 +21,10 @@ def main():
         help="path to filtered questions",
     )
     parser.add_argument("--verbose", action="store_true", default=False)
+    parser.add_argument("--randomise", action="store_true", default=False)
     args = parser.parse_args()
+
+    random.seed(10)
 
     if args.out_path is None:
         name = os.path.basename(args.in_path)
@@ -42,6 +46,9 @@ def main():
             sorted_questions_dedupe.append(question)
         else:
             print(f"Duplicated: {question_main}")
+
+    if args.randomise:
+        random.shuffle(sorted_questions_dedupe)
 
     questions = sorted_questions_dedupe[:500]
 

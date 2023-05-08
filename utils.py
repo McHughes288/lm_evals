@@ -65,10 +65,8 @@ def openai_call(
                 print(text)
                 print(f"${round(cost,2)}")
             return text, cost
-        except openai.error.RateLimitError:
-            print(
-                "The OpenAI API rate limit has been exceeded. Waiting 10 seconds and trying again."
-            )
+        except (openai.error.RateLimitError, openai.error.APIError) as e:
+            print(f"Waiting 10 seconds and trying again due to API error. {e}")
             time.sleep(10)  # Wait 10 seconds and try again
         else:
             break
